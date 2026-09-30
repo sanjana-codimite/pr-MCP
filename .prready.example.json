@@ -1,0 +1,17 @@
+{
+  "repo_path": "C:\\Users\\Admin\\Desktop\\MCP\\RepoToCheck\\knowledge-hub-beta",
+  "base_branch": "main",
+  "test_cmd": ["go", "-C", "backend/app", "test", "./...", "-json"],
+  "test_format": "gotest-json",
+  "lint_cmd": ["go", "-C", "backend/app", "vet", "./..."],
+  "dependency_file": "backend/app/go.mod",
+  "report_dir": "./reports",
+  "timeouts_seconds": {
+    "tests": 120,
+    "lint": 60,
+    "audit": 30,
+    "git": 60
+  },
+  "max_output_bytes": 8192,
+  "osv_base_url": "https://api.osv.dev"
+}
