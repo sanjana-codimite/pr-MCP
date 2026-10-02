@@ -164,7 +164,33 @@ func (s *Server) registerTools() {
 		return makeToolResult(result), EmptyOutput{}, nil
 	})
 
+	// save_report: writes the readiness report to disk.
+	mcp.AddTool(s.mcp, &mcp.Tool{
+		Name:        "save_report",
+		Description: "Save a PR readiness report to disk. Writes to both latest.md and a timestamped file. The report path is fixed by the server; you provide only the markdown content. NON-READ-ONLY: writes files to the report directory.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in SaveReportInput) (*mcp.CallToolResult, EmptyOutput, error) {
+		if in.PRNumber <= 0 {
+			return nil, EmptyOutput{}, fmt.Errorf("pr_number must be > 0, got %d", in.PRNumber)
+		}
+		if in.Markdown == "" {
+			return nil, EmptyOutput{}, fmt.Errorf("markdown content is required")
+		}
 
+		path, err := report.Save(s.cfg.ReportDir, in.PRNumber, in.Markdown)
+		result := &checks.CheckResult{
+			Check:  "report",
+			Counts: map[string]int{},
+		}
+		if err != nil {
+			result.Status = checks.StatusERROR
+			result.Summary = fmt.Sprintf("Failed to save report: %v", err)
+		} else {
+			result.Status = checks.StatusPASS
+			result.Summary = fmt.Sprintf("Report saved to %s", path)
+			result.Details = []string{path}
+		}
+		return makeToolResult(result), EmptyOutput{}, nil
+	})
 }
 
 // registerResources adds MCP resources to the server.
