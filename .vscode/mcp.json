@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "pr-readiness": {
+      "type": "stdio",
+      "command": "C:\\Users\\Admin\\Desktop\\MCP\\mcp-server\\mcp-pr-readiness\\bin\\prready-server.exe",
+      "args": ["--config", "C:\\Users\\Admin\\Desktop\\MCP\\mcp-server\\mcp-pr-readiness\\.prready.json"]
+    }
+  }
+}
